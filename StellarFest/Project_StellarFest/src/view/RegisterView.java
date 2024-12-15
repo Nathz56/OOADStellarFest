@@ -39,7 +39,7 @@ public class RegisterView extends Application {
                                     new Label("Role"), roleBox,   
                                     registerButton);  
 
-        Scene scene = new Scene(layout, 300, 300); // Adjusted height  
+        Scene scene = new Scene(layout, 300, 300); 
         primaryStage.setScene(scene);  
         primaryStage.show();  
     }  

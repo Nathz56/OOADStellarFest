@@ -63,6 +63,8 @@ public class Controller {
         return model.changeProfile(userId, email, username, password);
     }
   
+    
+    //GUEST MODE VIEW STARTS HERE 
     public static List<Invitations> fetchInvitations(int userId) {
         List<Invitations> invitations = new ArrayList<>();
         String query = "SELECT * FROM invitations WHERE status = 'Pending' AND userid = ?";
@@ -91,8 +93,7 @@ public class Controller {
         return invitations;
     }
 
-//    //acc inviations
-//    
+//    //acc inviation
     public static boolean acceptInvitation(int id) {
         String query = "UPDATE invitations SET status = 'ACCEPTED' WHERE id = ?";
 
@@ -151,6 +152,137 @@ public class Controller {
         return events;
     }
 
-        
+    
+    //END OF GUESTS
+       
+
+
+//admin controller dari sini
+
+	public static List<Event> fetchAllEvents() {
+		List<Event> events = new ArrayList<>();
+	    String query = "SELECT * FROM events";
+
+	    try (Connection conn = DriverManager.getConnection(
+	            "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+	            "root", 
+	            "");
+	         PreparedStatement stmt = conn.prepareStatement(query);
+	         ResultSet rs = stmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            events.add(new Event(
+	                rs.getInt("id"),
+	                rs.getString("name"),
+	                rs.getTimestamp("date"),
+	                rs.getString("location"),
+	                rs.getString("description")
+	            ));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return events;
+	
 }
+	
+	public static Event fetchEventDetails(int eventId) {
+	    String query = "SELECT * FROM events WHERE id = ?";
+	    Event event = null;
+
+	    try (Connection conn = DriverManager.getConnection(
+	            "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+	            "root", 
+	            "");
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, eventId);
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                event = new Event(
+	                    rs.getInt("id"),
+	                    rs.getString("name"),
+	                    rs.getTimestamp("date"),
+	                    rs.getString("location"),
+	                    rs.getString("description")
+	                );
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return event;
+	}
+
+
+	public static List<User> fetchAllUsers() {
+		 List<User> users = new ArrayList<>();
+		    String query = "SELECT * FROM users";
+
+		    try (Connection conn = DriverManager.getConnection(
+		            "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+		            "root", 
+		            "");
+		         PreparedStatement stmt = conn.prepareStatement(query);
+		         ResultSet rs = stmt.executeQuery()) {
+
+		        while (rs.next()) {
+		            users.add(new User(
+		                rs.getInt("id"),
+		                rs.getString("email"),
+		                rs.getString("username"),
+		                rs.getString("password"),
+		                rs.getString("role")
+		            ));
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return users;
+}
+
+	public static boolean deleteEvent(int eventId) {
+		String query = "DELETE FROM events WHERE id = ?";
+
+	    try (Connection conn = DriverManager.getConnection(
+	            "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+	            "root", 
+	            "");
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, eventId);
+	        int rowsAffected = stmt.executeUpdate();
+	        return rowsAffected > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+}
+
+	public static boolean deleteUser(int userId) {
+		String query = "DELETE FROM users WHERE id = ?";
+
+	    try (Connection conn = DriverManager.getConnection(
+	            "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+	            "root", 
+	            "");
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, userId);
+	        int rowsAffected = stmt.executeUpdate();
+	        return rowsAffected > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+}
+}
+
+
+
 

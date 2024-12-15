@@ -32,7 +32,7 @@ public class GuestView extends Application{
 		
 
 	    viewInvitationsButton.setOnAction(e -> showInvitations(primaryStage));
-//        viewAcceptedEventsButton.setOnAction(e -> showAcceptedEvents());
+        viewAcceptedEventsButton.setOnAction(e -> showAcceptedEvents(primaryStage));
 //        backButton.setOnAction(e -> backMainMenu());
         
 	    	
@@ -58,7 +58,7 @@ public class GuestView extends Application{
 	        acceptButton.setOnAction(e -> {
 	            if (Controller.acceptInvitation(invitation.getId())) {
 	                new Alert(Alert.AlertType.INFORMATION, "Accepted invitation for Event ID " + invitation.getEventId()).showAndWait();
-	                showInvitations(primaryStage); // Refresh the list
+	                showInvitations(primaryStage);
 	            } else {
 	                new Alert(Alert.AlertType.ERROR, "Error accepting invitation.").showAndWait();
 	            }
@@ -76,20 +76,16 @@ public class GuestView extends Application{
 
 	
 	private void showAcceptedEvents(Stage primaryStage) {
-	    List<Event> acceptedEvents = Controller.fetchAcceptedEvents(userId);
+	    List<Event> acceptedEvents = Controller.fetchAcceptedEvents(userId); 
 	    VBox layout = new VBox(10);
 
 	    if (acceptedEvents.isEmpty()) {
 	        layout.getChildren().add(new Label("No accepted events available."));
 	    } else {
 	        for (Event event : acceptedEvents) {
-	            Label eventLabel = new Label(
-	                "Name: " + event.getName() +
-	                "\nDate: " + event.getDate() +
-	                "\nLocation: " + event.getLocation() +
-	                "\nDescription: " + event.getDescription()
-	            );
-	            layout.getChildren().add(eventLabel);
+	            Button eventButton = new Button(event.getName());
+	            eventButton.setOnAction(e -> showEventDetails(primaryStage, event)); 
+	            layout.getChildren().add(eventButton);
 	        }
 	    }
 
@@ -100,5 +96,23 @@ public class GuestView extends Application{
 	    primaryStage.setScene(new Scene(layout, 400, 400));
 	}
 
+	private void showEventDetails(Stage primaryStage, Event event) {
+	    VBox layout = new VBox(10);
+
+	    Label nameLabel = new Label("Name: " + event.getName());
+	    Label dateLabel = new Label("Date: " + event.getDate());
+	    Label locationLabel = new Label("Location: " + event.getLocation());
+	    Label descriptionLabel = new Label("Description: " + event.getDescription());
+
+	    layout.getChildren().addAll(nameLabel, dateLabel, locationLabel, descriptionLabel);
+
+	    Button backButton = new Button("Back");
+	    backButton.setOnAction(e -> showAcceptedEvents(primaryStage));
+	    layout.getChildren().add(backButton);
+
+	    primaryStage.setScene(new Scene(layout, 400, 400));
+	}
+
+	
 
 }
