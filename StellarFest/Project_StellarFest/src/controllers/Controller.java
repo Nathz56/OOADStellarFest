@@ -10,8 +10,9 @@ import java.util.List;
 
 
 import models.Model;
+import models.Event;
 import models.User;
-
+import models.Invitations;
 
 public class Controller {
     private Model model;
@@ -62,80 +63,94 @@ public class Controller {
         return model.changeProfile(userId, email, username, password);
     }
   
-//    //fetch pending invitations
-//    public static List<Event> fetchInvitations() {
-//        List<Event> invitations = new ArrayList<>();
-//        String query = "SELECT * FROM invitations WHERE status = 'PENDING'";
-//
-//        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");
-//             PreparedStatement stmt = conn.prepareStatement(query);
-//             ResultSet rs = stmt.executeQuery()) {
-//
-//            while (rs.next()) {
-//                invitations.add(new Invitation(
-//                	rs.getInt("id"),
-//                    rs.getInt("userid"),
-//                    rs.getInt("eventid"),
-//                    rs.getString("status")
-//                ));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return invitations;
-//    }
-//    
+    public static List<Invitations> fetchInvitations(int userId) {
+        List<Invitations> invitations = new ArrayList<>();
+        String query = "SELECT * FROM invitations WHERE status = 'Pending' AND userid = ?";
+        
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+                "root", 
+                "");
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId); // Filter invitations by userId
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Invitations invitation = new Invitations(
+                        rs.getInt("id"),
+                        rs.getInt("eventid"),
+                        rs.getInt("userid"),
+                        rs.getString("status")
+                    );
+                    invitations.add(invitation);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return invitations;
+    }
+
 //    //acc inviations
 //    
-//    public static boolean acceptInvitation(int id) {
-//        String query = "UPDATE invitations SET status = 'ACCEPTED' WHERE id = ?";
-//
-//        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");
-//             PreparedStatement stmt = conn.prepareStatement(query)) {
-//
-//            stmt.setInt(1, id);  
-//            int rowsUpdated = stmt.executeUpdate();  
-//
-//            if (rowsUpdated > 0) {
-//                System.out.println("Invitation accepted!"); 
-//                return true;
-//            } else {
-//                System.out.println("No invitation found with the provided ID."); 
-//                return false;
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("Error while accepting the invitation."); 
-//            return false;
-//            
-//        }
-//    }
+    public static boolean acceptInvitation(int id) {
+        String query = "UPDATE invitations SET status = 'ACCEPTED' WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);  
+            int rowsUpdated = stmt.executeUpdate();  
+
+            if (rowsUpdated > 0) {
+                System.out.println("Invitation accepted!"); 
+                return true;
+            } else {
+                System.out.println("No invitation found with the provided ID."); 
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error while accepting the invitation."); 
+            return false;
+            
+        }
+    }
 
     
-//    //show acc inv
-//        public static List<Event> fetchAcceptedEvents() {
-//            List<Event> events = new ArrayList<>();
-//            String query = "SELECT * FROM invitations WHERE status = 'ACCEPTED'";
-//
-//            try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");
-//                 PreparedStatement stmt = conn.prepareStatement(query);
-//                 ResultSet rs = stmt.executeQuery()) {
-//
-//                while (rs.next()) {
-//                    events.add(new Event(
-//                    		rs.getInt("id"),
-//                            rs.getString("name"),
-//                            rs.getTimestamp("date"),
-//                            rs.getString("location"),
-//                            rs.getString("description")
-//                    ));
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            return events;
-//        }
-//        
+    //show acc inv
+    public static List<Event> fetchAcceptedEvents(int userId) {
+        List<Event> events = new ArrayList<>();
+        String query = "SELECT e.id, e.name, e.date, e.location, e.description " +
+                       "FROM events e " +
+                       "JOIN invitations i ON e.id = i.eventid " +
+                       "WHERE i.status = 'ACCEPTED' AND i.userid = ?";
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", 
+                "root", 
+                "");
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);  // Filter by userId
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    events.add(new Event(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getTimestamp("date"),
+                        rs.getString("location"),
+                        rs.getString("description")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
+
+        
 }
 

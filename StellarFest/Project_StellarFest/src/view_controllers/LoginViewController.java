@@ -36,7 +36,7 @@ public class LoginViewController {
             	AdminView adminView = new AdminView();
             	adminView.start(primaryStage);
             }else if("Guest".equals(user.getRole())) {
-            	GuestView guestView = new GuestView();
+            	GuestView guestView = new GuestView(user.getId());
                 guestView.start(primaryStage);
             }else if("Vendor".equals(user.getRole())) {
             	VendorView vendorView = new VendorView();
