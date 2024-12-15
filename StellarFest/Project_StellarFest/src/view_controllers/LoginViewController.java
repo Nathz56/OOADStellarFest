@@ -11,6 +11,7 @@ import view.AdminView;
 import view.EOView;
 import view.GuestView;
 import view.LoginView;
+import view.RegisterView;
 import view.VendorView;
 import models.User;
 
@@ -48,6 +49,10 @@ public class LoginViewController {
         } else {
             view.displayMessage("Invalid email or password.");
         }
+    }
+    public void redirectToRegister(Stage primaryStage) {
+        RegisterView registerView = new RegisterView();
+        registerView.start(primaryStage);
     }
     
 };

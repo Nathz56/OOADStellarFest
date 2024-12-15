@@ -14,6 +14,7 @@ public class LoginView extends Application {
     private TextField emailField;
     private PasswordField passwordField;
     private Button loginButton;
+    private Hyperlink registerLink;
 
     private LoginViewController controller;
 
@@ -35,9 +36,12 @@ public class LoginView extends Application {
         loginButton = new Button("Login");
 
         loginButton.setOnAction(e -> controller.handleLogin(primaryStage));
+        
+        registerLink = new Hyperlink("Don't have an acoount? Register");
+        registerLink.setOnAction(e -> controller.redirectToRegister(primaryStage));
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(new Label("Email"), emailField, new Label("Password"), passwordField, loginButton);
+        layout.getChildren().addAll(new Label("Email"), emailField, new Label("Password"), passwordField, loginButton, registerLink);
 
         Scene scene = new Scene(layout, 300, 200);
         primaryStage.setScene(scene);

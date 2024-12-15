@@ -1,28 +1,26 @@
 package view_controllers;  
 
-import models.Model;  
+import javafx.stage.Stage;
+import models.Model;
+import view.LoginView;
 import view.RegisterView;  
 
 public class RegisterViewController {  
 
     private RegisterView view;  
     private Model model;  
-
-    // Constructor to initialize the view and model  
+  
     public RegisterViewController(RegisterView view) {  
         this.view = view;  
-        this.model = new Model(); // Ensure the model is properly initialized  
+        this.model = new Model();  
     }  
 
-    // Handle the registration process  
-    public void handleRegister() {  
-        // Retrieve user input from the view  
+    public void handleRegister(Stage primaryStage) {    
         String email = view.getEmail();  
         String username = view.getUsername();  
         String password = view.getPassword();  
-        String role = view.getRole();  
+        String role = view.getRole();
 
-        // Validate fields (ensure they are not null or empty)  
         if (email == null || email.isEmpty()) {  
             view.displayMessage("Email cannot be empty.");  
             return;  
@@ -46,9 +44,17 @@ public class RegisterViewController {
         // Display a success or failure message  
         if (success) {  
             view.displayMessage("Registration successful!");  
-            return;
         } else {  
             view.displayMessage("Registration failed. Email or username may already be in use.");  
-        }  
-    }  
+        }
+        
+    	LoginView loginView = new LoginView();
+    	loginView.start(primaryStage);
+        
+    }
+    
+    public void redirectToLogin(Stage primaryStage) {
+        LoginView loginView = new LoginView();
+        loginView.start(primaryStage);
+    }
 }
