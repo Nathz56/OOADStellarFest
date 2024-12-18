@@ -25,13 +25,22 @@ public class EOView extends Application {
 	    Button addGuests = new Button ("Add Guests");
 	    Button editEventName = new Button ("Edit Event Name");
 	    Button createEvent = new Button ("Create Event");
+	    Button changeProfileButton = new Button("Change Profile");
 	    
-	    VBox layout = new VBox(5, viewOrganizedEvents, viewOrganizedEventsDetails, addVendors,addGuests,editEventName,createEvent);
+	    changeProfileButton.setOnAction(e -> openChangeProfileView(primaryStage, /* EO userId */ 4));
+	    
+	    VBox layout = new VBox(5, viewOrganizedEvents, viewOrganizedEventsDetails, addVendors, addGuests, editEventName, createEvent, changeProfileButton);
 
         Scene scene = new Scene(layout, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
 		
+	}
+	
+	private void openChangeProfileView(Stage primaryStage, int userId) {
+	    Stage profileStage = new Stage();
+	    ChangeProfileView profileView = new ChangeProfileView(userId);
+	    profileView.start(profileStage);
 	}
 
 }

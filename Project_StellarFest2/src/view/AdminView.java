@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
 import controllers.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -20,8 +19,6 @@ import models.Event;
 import models.User;
 
 public class AdminView extends Application {
-
-
 	
     @Override
     public void start(Stage primaryStage) {

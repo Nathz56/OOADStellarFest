@@ -29,19 +29,27 @@ public class GuestView extends Application{
 		
 		Button viewInvitationsButton = new Button("View Invitations");
 	    Button viewAcceptedEventsButton = new Button("View Accepted Events");
+	    Button changeProfileButton = new Button("Change Profile");
 		
 
 	    viewInvitationsButton.setOnAction(e -> showInvitations(primaryStage));
         viewAcceptedEventsButton.setOnAction(e -> showAcceptedEvents(primaryStage));
+        changeProfileButton.setOnAction(e -> openChangeProfileView(primaryStage, userId));
 //        backButton.setOnAction(e -> backMainMenu());
         
 	    	
-        VBox layout = new VBox(5, viewInvitationsButton, viewAcceptedEventsButton);
+        VBox layout = new VBox(5, viewInvitationsButton, viewAcceptedEventsButton, changeProfileButton);
 
         Scene scene = new Scene(layout, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
 	
+	}
+	
+	private void openChangeProfileView(Stage primaryStage, int userId) {
+	    Stage profileStage = new Stage();
+	    ChangeProfileView profileView = new ChangeProfileView(userId);
+	    profileView.start(profileStage);
 	}
 	
 	private void showInvitations(Stage primaryStage) {

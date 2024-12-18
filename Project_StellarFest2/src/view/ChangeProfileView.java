@@ -8,15 +8,14 @@ import javafx.stage.Stage;
 import view_controllers.ChangeProfileViewController;
 
 public class ChangeProfileView extends Application {
-
     private TextField emailField, usernameField;
     private PasswordField passwordField;
     private Button updateButton;
 
     private ChangeProfileViewController controller;
 
-    public ChangeProfileView() {
-        controller = new ChangeProfileViewController(this);
+    public ChangeProfileView(int userId) {
+        controller = new ChangeProfileViewController(this, userId);
     }
 
     @Override
@@ -55,10 +54,5 @@ public class ChangeProfileView extends Application {
     public void displayMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
         alert.showAndWait();
-    }
-    
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
