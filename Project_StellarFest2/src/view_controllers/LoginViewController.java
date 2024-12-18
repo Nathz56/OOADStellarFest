@@ -34,7 +34,7 @@ public class LoginViewController {
             view.displayMessage("Login successful! Welcome, " + user.getUsername());
             
             if("Admin".equals(user.getRole())) {
-            	AdminView adminView = new AdminView();
+            	AdminView adminView = new AdminView(user.getId());
             	adminView.start(primaryStage);
             }else if("Guest".equals(user.getRole())) {
             	GuestView guestView = new GuestView(user.getId());
@@ -43,7 +43,7 @@ public class LoginViewController {
             	VendorView vendorView = new VendorView(user.getId()); // Pass vendorId
                 vendorView.start(primaryStage);
             }else if("Event Organizer".equals(user.getRole())) {
-            	EOView eoView = new EOView();
+            	EOView eoView = new EOView(user.getId());
             	eoView.start(primaryStage);
             }
         } else {

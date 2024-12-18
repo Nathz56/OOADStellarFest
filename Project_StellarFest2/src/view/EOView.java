@@ -12,6 +12,12 @@ import javafx.stage.Stage;
 import models.Event;
 
 public class EOView extends Application {
+	private int eoId;
+
+	public EOView(int eoId) {
+		super();
+		this.eoId = eoId;
+	}
 
 	@Override
 	public void start(Stage primaryStage){
@@ -27,7 +33,7 @@ public class EOView extends Application {
 	    Button createEvent = new Button ("Create Event");
 	    Button changeProfileButton = new Button("Change Profile");
 	    
-	    changeProfileButton.setOnAction(e -> openChangeProfileView(primaryStage, /* EO userId */ 4));
+	    changeProfileButton.setOnAction(e -> openChangeProfileView(primaryStage));
 	    
 	    VBox layout = new VBox(5, viewOrganizedEvents, viewOrganizedEventsDetails, addVendors, addGuests, editEventName, createEvent, changeProfileButton);
 
@@ -37,9 +43,9 @@ public class EOView extends Application {
 		
 	}
 	
-	private void openChangeProfileView(Stage primaryStage, int userId) {
+	private void openChangeProfileView(Stage primaryStage) {
 	    Stage profileStage = new Stage();
-	    ChangeProfileView profileView = new ChangeProfileView(userId);
+	    ChangeProfileView profileView = new ChangeProfileView(eoId);
 	    profileView.start(profileStage);
 	}
 

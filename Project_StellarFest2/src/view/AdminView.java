@@ -19,8 +19,14 @@ import models.Event;
 import models.User;
 
 public class AdminView extends Application {
+	private int adminId;
 	
-    @Override
+    public AdminView(int adminId) {
+
+		this.adminId = adminId;
+	}
+
+	@Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Admin Menu");
 
@@ -35,12 +41,21 @@ public class AdminView extends Application {
         deleteEventButton.setOnAction(e -> deleteEvent(primaryStage));
         viewAllUsersButton.setOnAction(e -> showAllUsers(primaryStage));
         deleteUserButton.setOnAction(e -> deleteUser(primaryStage));
+        
+        Button changeProfileButton = new Button("Change Profile");
+        changeProfileButton.setOnAction(e -> openChangeProfileView(primaryStage));
 
-        VBox layout = new VBox(10, viewAllEventsButton, viewEventDetailsButton, deleteEventButton, viewAllUsersButton, deleteUserButton);
+        VBox layout = new VBox(10, viewAllEventsButton, viewEventDetailsButton, deleteEventButton, viewAllUsersButton, deleteUserButton, changeProfileButton);
 
         Scene scene = new Scene(layout, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    private void openChangeProfileView(Stage primaryStage) {
+        // Open the ChangeProfileView and pass the adminId
+        ChangeProfileView changeProfileView = new ChangeProfileView(adminId);
+        changeProfileView.start(new Stage()); // Open it in a new window
     }
 
     private void showAllEvents(Stage primaryStage) {
