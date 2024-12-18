@@ -156,4 +156,81 @@ public class EventOrganizerModel {
         return vendors;
     }
 
+    public ArrayList<String[]> getAvailableVendors(int eventId) {
+        ArrayList<String[]> vendors = new ArrayList<>();
+        String query = "SELECT id, name, description, vendorId FROM vendor " +
+                "WHERE id NOT IN (SELECT vendor_id FROM event_vendors WHERE event_id = ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                vendors.add(new String[]{
+                        String.valueOf(rs.getInt("id")),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("vendorId")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching available vendors.");
+            e.printStackTrace();
+        }
+        return vendors;
+    }
+
+    public boolean inviteVendor(int eventId, int vendorId) {
+        String query = "INSERT INTO event_vendors (event_id, vendor_id) VALUES (?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, vendorId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error inviting vendor.");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Fetch Guests Who Haven't Been Invited to the Event
+    public ArrayList<String[]> getAvailableGuests(int eventId) {
+        ArrayList<String[]> guests = new ArrayList<>();
+        String query = "SELECT id, username, email FROM users " +
+                "WHERE role = 'Guest' " +
+                "AND id NOT IN (SELECT guest_id FROM event_guests WHERE event_id = ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                guests.add(new String[]{
+                        String.valueOf(rs.getInt("id")),  // User ID
+                        rs.getString("username"),            // Guest Name
+                        rs.getString("email")            // Guest Email
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching available guests.");
+            e.printStackTrace();
+        }
+        return guests;
+    }
+
+    public boolean inviteGuest(int eventId, int guestId) {
+        String query = "INSERT INTO event_guests (event_id, guest_id) VALUES (?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, guestId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error inviting guest.");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

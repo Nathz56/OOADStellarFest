@@ -54,4 +54,41 @@ public class EventOrganizerController {
         return model.getEventVendors(eventId);
     }
 
+    public ArrayList<String[]> getAvailableVendors(int eventId) {
+        return model.getAvailableVendors(eventId);
+    }
+
+    public String inviteVendors(int eventId, ArrayList<Integer> vendorIds) {
+        if (vendorIds.isEmpty()) {
+            return "Please select at least one vendor to invite.";
+        }
+
+        for (int vendorId : vendorIds) {
+            boolean success = model.inviteVendor(eventId, vendorId);
+            if (!success) {
+                return "Failed to invite vendor with ID: " + vendorId;
+            }
+        }
+        return "Vendors invited successfully!";
+    }
+
+    public ArrayList<String[]> getAvailableGuests(int eventId) {
+        return model.getAvailableGuests(eventId);
+    }
+
+    public String inviteGuests(int eventId, ArrayList<Integer> guestIds) {
+        if (guestIds.isEmpty()) {
+            return "Please select at least one guest to invite.";
+        }
+
+        for (int guestId : guestIds) {
+            boolean success = model.inviteGuest(eventId, guestId);
+            if (!success) {
+                return "Failed to invite guest with ID: " + guestId;
+            }
+        }
+        return "Guests invited successfully!";
+    }
+
+
 }
