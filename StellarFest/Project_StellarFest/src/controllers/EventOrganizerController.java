@@ -30,7 +30,6 @@ public class EventOrganizerController {
         return result ? attendeeType + " added successfully!" : "Failed to add " + attendeeType + ".";
     }
 
-
     // 4. Update Event Name
     public String updateEventName(int eventId, String newName) {
         boolean result = model.updateEventName(eventId, newName);
@@ -89,6 +88,4 @@ public class EventOrganizerController {
         }
         return "Guests invited successfully!";
     }
-
-
 }

@@ -27,7 +27,6 @@ public class EventOrganizerView extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Event Organizer");
 
-        // Buttons
         Button viewEventsButton = new Button("View Organized Event");
         Button viewEventDetailsButton = new Button("View Organized Event Details");
         Button addVendorsButton = new Button("Add Vendors");
@@ -35,7 +34,6 @@ public class EventOrganizerView extends Application {
         Button editEventNameButton = new Button("Edit Event Name");
         Button createEventButton = new Button("Create Event");
 
-        // Button Actions
         viewEventsButton.setOnAction(e -> showEventsWindow());
         viewEventDetailsButton.setOnAction(e -> askForEventIdAndShowDetails());
         addVendorsButton.setOnAction(e -> askForEventIdAndAddVendors());
@@ -43,7 +41,6 @@ public class EventOrganizerView extends Application {
         editEventNameButton.setOnAction(e -> askForEventIdAndEditName());
         createEventButton.setOnAction(e -> createEventWindow());
 
-        // Layout
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(20));
         vbox.getChildren().addAll(
@@ -60,7 +57,6 @@ public class EventOrganizerView extends Application {
         primaryStage.show();
     }
 
-    // Prompt User for Event ID
     private int askForEventId(String purpose) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Enter Event ID");
@@ -72,7 +68,6 @@ public class EventOrganizerView extends Application {
                 .orElse(-1);
     }
 
-    // 1. View Organized Events
     private void showEventsWindow() {
         Stage stage = new Stage();
         stage.setTitle("Organized Events");
@@ -105,7 +100,6 @@ public class EventOrganizerView extends Application {
         eventTable.setItems(data);
     }
 
-    // 2. View Event Details
     private void askForEventIdAndShowDetails() {
         int eventId = askForEventId("view event details");
         if (eventId == -1) return;
@@ -114,7 +108,6 @@ public class EventOrganizerView extends Application {
         ArrayList<String> guests = controller.getEventGuests(eventId);
         ArrayList<String> vendors = controller.getEventVendors(eventId);
 
-        // Stage and Layout
         Stage stage = new Stage();
         stage.setTitle("Event Details");
 
@@ -139,8 +132,6 @@ public class EventOrganizerView extends Application {
         stage.show();
     }
 
-
-    // 3. Add Vendors
     private void askForEventIdAndAddVendors() {
         int eventId = askForEventId("add vendors");
         if (eventId == -1) return;
@@ -148,7 +139,6 @@ public class EventOrganizerView extends Application {
         Stage stage = new Stage();
         stage.setTitle("Add Vendors to Event ID: " + eventId);
 
-        // Table for Vendors
         TableView<String[]> vendorTable = new TableView<>();
         TableColumn<String[], String> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue()[0]));
@@ -179,12 +169,10 @@ public class EventOrganizerView extends Application {
 
         vendorTable.getColumns().addAll(idColumn, nameColumn, descriptionColumn, vendorIdColumn, selectColumn);
 
-        // Load Vendors
         ArrayList<String[]> vendors = controller.getAvailableVendors(eventId);
         ObservableList<String[]> data = FXCollections.observableArrayList(vendors);
         vendorTable.setItems(data);
 
-        // Invite Button
         Button inviteButton = new Button("Send Invitations");
         inviteButton.setOnAction(e -> {
             ArrayList<Integer> selectedVendorIds = new ArrayList<>();
@@ -211,7 +199,6 @@ public class EventOrganizerView extends Application {
         stage.show();
     }
 
-    // 4. Add Guests
     private void askForEventIdAndAddGuests() {
         int eventId = askForEventId("add guests");
         if (eventId == -1) return;
@@ -219,7 +206,6 @@ public class EventOrganizerView extends Application {
         Stage stage = new Stage();
         stage.setTitle("Add Guests to Event ID: " + eventId);
 
-        // Table for Guests
         TableView<String[]> guestTable = new TableView<>();
         TableColumn<String[], String> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue()[0]));
@@ -247,12 +233,10 @@ public class EventOrganizerView extends Application {
 
         guestTable.getColumns().addAll(idColumn, nameColumn, emailColumn, selectColumn);
 
-        // Load Guests
         ArrayList<String[]> guests = controller.getAvailableGuests(eventId);
         ObservableList<String[]> data = FXCollections.observableArrayList(guests);
         guestTable.setItems(data);
 
-        // Invite Button
         Button inviteButton = new Button("Send Invitations");
         inviteButton.setOnAction(e -> {
             ArrayList<Integer> selectedGuestIds = new ArrayList<>();
@@ -279,7 +263,6 @@ public class EventOrganizerView extends Application {
         stage.show();
     }
 
-    // 5. Edit Event Name
     private void askForEventIdAndEditName() {
         int eventId = askForEventId("edit event name");
         if (eventId == -1) return;
@@ -304,13 +287,11 @@ public class EventOrganizerView extends Application {
         stage.show();
     }
 
-    // Utility: Show Alert
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.showAndWait();
     }
 
-    // 6. Create Event Window (unchanged)
     private void createEventWindow() {
         Stage stage = new Stage();
         stage.setTitle("Create Event");
@@ -332,7 +313,6 @@ public class EventOrganizerView extends Application {
         descriptionField.setPromptText("Description");
         descriptionField.setPrefWidth(250);
 
-        // Create Button
         Button createButton = new Button("Create Event");
         createButton.setOnAction(e -> {
             String result = controller.createEvent(1, nameField.getText(),
@@ -343,7 +323,6 @@ public class EventOrganizerView extends Application {
             stage.close();
         });
 
-        // Layout
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
         root.getChildren().addAll(
@@ -354,11 +333,9 @@ public class EventOrganizerView extends Application {
                 createButton
         );
 
-        // Scene
-        stage.setScene(new Scene(root, 350, 300)); // Adjusted scene size
+        stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);

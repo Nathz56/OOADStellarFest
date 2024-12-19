@@ -6,13 +6,12 @@ import java.util.ArrayList;
 public class EventOrganizerModel {
     private Connection connection;
 
-    // Constructor: Establish database connection
     public EventOrganizerModel() {
         try {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true",
                     "root",
-                    "" // Replace with your database password if necessary
+                    ""
             );
         } catch (SQLException e) {
             System.out.println("Failed to connect to the database.");
@@ -20,7 +19,6 @@ public class EventOrganizerModel {
         }
     }
 
-    // 1. Fetch all organized events
     public ArrayList<String[]> getOrganizedEvents(int organizerId) {
         ArrayList<String[]> events = new ArrayList<>();
         String query = "SELECT id, name, date, location FROM events WHERE organizer_id = ?";
@@ -43,7 +41,6 @@ public class EventOrganizerModel {
         return events;
     }
 
-    // 2. Fetch event details
     public String[] getEventDetails(int eventId) {
         String query = "SELECT name, date, location, description FROM events WHERE id = ?";
         String[] details = new String[4];
@@ -64,7 +61,6 @@ public class EventOrganizerModel {
         return details;
     }
 
-    // 3. Add Vendor or Guest
     public boolean addAttendee(int eventId, String attendeeName, String attendeeType) {
         String table = attendeeType.equalsIgnoreCase("vendor") ? "vendors" : "guests";
         String query = "INSERT INTO " + table + " (event_id, name) VALUES (?, ?)";
@@ -86,8 +82,6 @@ public class EventOrganizerModel {
         return false;
     }
 
-
-    // 4. Update Event Name
     public boolean updateEventName(int eventId, String newName) {
         String query = "UPDATE events SET name = ? WHERE id = ?";
 
@@ -101,7 +95,6 @@ public class EventOrganizerModel {
         return false;
     }
 
-    // 5. Create New Event
     public boolean createEvent(int organizerId, String name, String date, String location, String description) {
         String query = "INSERT INTO events (organizer_id, name, date, location, description) VALUES (?, ?, ?, ?, ?)";
 
@@ -118,7 +111,6 @@ public class EventOrganizerModel {
         return false;
     }
 
-    // Fetch Guests for an Event
     public ArrayList<String> getEventGuests(int eventId) {
         ArrayList<String> guests = new ArrayList<>();
         String query = "SELECT name FROM guests WHERE event_id = ?";
@@ -194,7 +186,6 @@ public class EventOrganizerModel {
         return false;
     }
 
-    // Fetch Guests Who Haven't Been Invited to the Event
     public ArrayList<String[]> getAvailableGuests(int eventId) {
         ArrayList<String[]> guests = new ArrayList<>();
         String query = "SELECT id, username, email FROM users " +
@@ -207,9 +198,9 @@ public class EventOrganizerModel {
 
             while (rs.next()) {
                 guests.add(new String[]{
-                        String.valueOf(rs.getInt("id")),  // User ID
-                        rs.getString("username"),            // Guest Name
-                        rs.getString("email")            // Guest Email
+                        String.valueOf(rs.getInt("id")),
+                        rs.getString("username"),
+                        rs.getString("email")
                 });
             }
         } catch (SQLException e) {

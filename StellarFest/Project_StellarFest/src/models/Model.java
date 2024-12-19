@@ -6,18 +6,29 @@ public class Model {
 
     private Connection connection;
 
-    // Constructor to establish database connection
     public Model() {
         try {
             connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true",
-                "root", 
-                "" // Replace with your database password if necessary
+                    "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    ""
             );
         } catch (SQLException e) {
             System.out.println("Failed to connect to the database.");
             e.printStackTrace();
         }
+    }
+
+    // Method to get a connection (for Controller usage)
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    ""
+            );
+        }
+        return connection;
     }
 
     // Login a user
@@ -30,11 +41,11 @@ public class Model {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return new User(
-                    rs.getInt("id"),
-                    rs.getString("email"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getString("role")
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role")
                 );
             }
         } catch (SQLException e) {
@@ -64,7 +75,7 @@ public class Model {
     // Change user profile
     public boolean changeProfile(int userId, String email, String username, String password) {
         String query = "UPDATE users SET email = COALESCE(?, email), username = COALESCE(?, username), " +
-                       "password = COALESCE(?, password) WHERE id = ?";
+                "password = COALESCE(?, password) WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.setString(2, username);

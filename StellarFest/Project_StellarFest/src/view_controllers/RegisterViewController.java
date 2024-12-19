@@ -38,10 +38,8 @@ public class RegisterViewController {
             return;  
         }  
 
-        // Attempt to register the user  
         boolean success = model.register(email, username, password, role);  
 
-        // Display a success or failure message  
         if (success) {  
             view.displayMessage("Registration successful!");  
         } else {  
