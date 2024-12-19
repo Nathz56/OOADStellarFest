@@ -42,7 +42,6 @@ public class LoginViewController {
                     vendorView.start(primaryStage);
                     break;
 
-
                 case "Event Organizer":
                     EventOrganizerView eoView = new EventOrganizerView();
                     eoView.start(primaryStage);

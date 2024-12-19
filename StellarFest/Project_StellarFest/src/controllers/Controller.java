@@ -285,6 +285,48 @@ public class Controller {
 		}
 	}
 
+	public List<User> fetchVendors() {
+		List<User> vendors = new ArrayList<>();
+		String query = "SELECT * FROM users WHERE role = 'Vendor'";
+
+		try (Connection conn = model.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(query);
+			 ResultSet rs = stmt.executeQuery()) {
+
+			while (rs.next()) {
+				vendors.add(new User(
+						rs.getInt("id"),
+						rs.getString("email"),
+						rs.getString("username"),
+						rs.getString("password"),
+						rs.getString("role")
+				));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return vendors;
+	}
+
+
+	public boolean sendInvitation(int vendorId, int eventId) {
+		String query = "INSERT INTO invitations (userid, eventid, status) VALUES (?, ?, 'Pending')";
+
+		try (Connection conn = model.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(query)) {
+			stmt.setInt(1, vendorId);
+			stmt.setInt(2, eventId);
+
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+
 
 
 

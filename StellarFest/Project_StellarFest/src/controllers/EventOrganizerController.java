@@ -2,6 +2,9 @@ package controllers;
 
 import models.EventOrganizerModel;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class EventOrganizerController {
@@ -87,5 +90,31 @@ public class EventOrganizerController {
             }
         }
         return "Guests invited successfully!";
+    }
+
+    public void sendInvitation(int eventId, int vendorId) {
+        String query = "INSERT INTO invitations (eventid, userid, status) VALUES (?, ?, 'Pending')";
+
+        try (Connection conn = model.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, eventId);
+            stmt.setInt(2, vendorId);
+
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                showAlert("Invitation sent successfully to Vendor ID: " + vendorId);
+            } else {
+                showAlert("Failed to send invitation.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("An error occurred while sending the invitation.");
+        }
+    }
+
+    private void showAlert(String message) {
+        // Implementation for showing alerts in your application
+        System.out.println(message); // Replace with GUI alert in your JavaFX application
     }
 }

@@ -62,7 +62,7 @@ public class EventOrganizerModel {
     }
 
     public boolean addAttendee(int eventId, String attendeeName, String attendeeType) {
-        String table = attendeeType.equalsIgnoreCase("vendor") ? "vendors" : "guests";
+        String table = attendeeType.equalsIgnoreCase("vendor") ? "vendor" : "guests";
         String query = "INSERT INTO " + table + " (event_id, name) VALUES (?, ?)";
 
         System.out.println("Adding " + attendeeType + " to event ID: " + eventId);
@@ -224,4 +224,8 @@ public class EventOrganizerModel {
         return false;
     }
 
+
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");
+    }
 }
