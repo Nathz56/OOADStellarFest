@@ -60,37 +60,37 @@ public class EventOrganizerController {
         return model.getAvailableVendors(eventId);
     }
 
-//    public String inviteVendors(int eventId, ArrayList<Integer> vendorIds) {
-//        if (vendorIds.isEmpty()) {
-//            return "Please select at least one vendor to invite.";
-//        }
-//
-//        for (int vendorId : vendorIds) {
-//            boolean success = model.sendVendorInvitation(eventId, vendorId);
-//            if (!success) {
-//                return "Failed to invite vendor with ID: " + vendorId;
-//            }
-//        }
-//        return "Vendors invited successfully!";
-//    }
+    public String inviteVendors(int eventId, ArrayList<Integer> vendorIds) {
+        if (vendorIds.isEmpty()) {
+            return "Please select at least one vendor to invite.";
+        }
+
+        for (int vendorId : vendorIds) {
+            boolean success = model.sendVendorInvitation(eventId, vendorId);
+            if (!success) {
+                return "Failed to invite vendor with ID: " + vendorId;
+            }
+        }
+        return "Vendors invited successfully!";
+    }
 
     public ArrayList<String[]> getAvailableGuests(int eventId) {
         return model.getAvailableGuests(eventId);
     }
 
-//    public String inviteGuests(int eventId, ArrayList<Integer> guestIds) {
-//        if (guestIds.isEmpty()) {
-//            return "Please select at least one guest to invite.";
-//        }
-//
-//        for (int guestId : guestIds) {
-//            boolean success = model.sendGuestInvitation(eventId, guestId);
-//            if (!success) {
-//                return "Failed to invite guest with ID: " + guestId;
-//            }
-//        }
-//        return "Guests invited successfully!";
-//    }
+    public String inviteGuests(int eventId, ArrayList<Integer> guestIds) {
+        if (guestIds.isEmpty()) {
+            return "Please select at least one guest to invite.";
+        }
+
+        for (int guestId : guestIds) {
+            boolean success = model.sendGuestInvitation(eventId, guestId);
+            if (!success) {
+                return "Failed to invite guest with ID: " + guestId;
+            }
+        }
+        return "Guests invited successfully!";
+    }
 
     public String sendGuestInvitation(int eventId, int guestId) {
         boolean result = model.sendGuestInvitation(eventId, guestId);
@@ -125,7 +125,7 @@ public class EventOrganizerController {
     }
 
     private void showAlert(String message) {
-        // Implementation for showing alerts in your application
-        System.out.println(message); // Replace with GUI alert in your JavaFX application
+
+        System.out.println(message);
     }
 }

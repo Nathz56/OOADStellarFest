@@ -66,40 +66,72 @@ public class AdminView extends Application {
         primaryStage.setScene(new Scene(layout, 400, 400));
     }
 
-    
-    
+
+
     private void showEventDetails(Stage primaryStage) {
-    	VBox layout = new VBox(10);
+        VBox layout = new VBox(10);
 
         Label idLabel = new Label("Enter Event ID:");
         TextField idField = new TextField();
         Button fetchDetailsButton = new Button("View the Event Details");
 
         Label eventDetailsLabel = new Label();
+        Label guestDetailsLabel = new Label();
+        Label vendorDetailsLabel = new Label();
 
         fetchDetailsButton.setOnAction(e -> {
-            int eventId = Integer.parseInt(idField.getText());
-            Event event = Controller.fetchEventDetails(eventId);
+            try {
+                int eventId = Integer.parseInt(idField.getText());
+                Event event = Controller.fetchEventDetails(eventId);
 
-            if (event != null) {
-                eventDetailsLabel.setText(
-                    "Name: " + event.getName() + "\n" +
-                    "Date: " + event.getDate() + "\n" +
-                    "Location: " + event.getLocation() + "\n" +
-                    "Description: " + event.getDescription()
-                );
-            } else {
-                new Alert(Alert.AlertType.ERROR, "Event not found!").showAndWait();
+                if (event != null) {
+                    // Display event details
+                    StringBuilder eventDetails = new StringBuilder(
+                            "Name: " + event.getName() + "\n" +
+                                    "Date: " + event.getDate() + "\n" +
+                                    "Location: " + event.getLocation() + "\n" +
+                                    "Description: " + event.getDescription() + "\n"
+                    );
+
+                    // Display guest details
+                    StringBuilder guestDetails = new StringBuilder("Guests:\n");
+                    if (event.getGuestIds() != null && !event.getGuestIds().isEmpty()) {
+                        for (Integer guestId : event.getGuestIds()) {
+                            guestDetails.append(" - Guest ID: ").append(guestId).append("\n");
+                        }
+                    } else {
+                        guestDetails.append("No guests assigned.\n");
+                    }
+
+                    // Display vendor details
+                    StringBuilder vendorDetails = new StringBuilder("Vendors:\n");
+                    if (event.getVendorIds() != null && !event.getVendorIds().isEmpty()) {
+                        for (Integer vendorId : event.getVendorIds()) {
+                            vendorDetails.append(" - Vendor ID: ").append(vendorId).append("\n");
+                        }
+                    } else {
+                        vendorDetails.append("No vendors assigned.\n");
+                    }
+
+                    eventDetailsLabel.setText(eventDetails.toString());
+                    guestDetailsLabel.setText(guestDetails.toString());
+                    vendorDetailsLabel.setText(vendorDetails.toString());
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Event not found!").showAndWait();
+                }
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Invalid Event ID!").showAndWait();
             }
         });
 
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> start(primaryStage));
 
-        layout.getChildren().addAll(idLabel, idField, fetchDetailsButton, eventDetailsLabel, backButton);
-        primaryStage.setScene(new Scene(layout, 400, 400));
+        layout.getChildren().addAll(idLabel, idField, fetchDetailsButton, eventDetailsLabel, guestDetailsLabel, vendorDetailsLabel, backButton);
+        primaryStage.setScene(new Scene(layout, 400, 600));
     }
-  
+
+
 
     private void deleteEvent(Stage primaryStage) {
         VBox layout = new VBox(10);

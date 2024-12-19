@@ -361,33 +361,63 @@ public class Controller {
 	}
 
 	public static Event fetchEventDetails(int eventId) {
-		String query = "SELECT * FROM events WHERE id = ?";
+		String eventQuery = "SELECT * FROM events WHERE id = ?";
+		String guestQuery = "SELECT guest_id FROM event_guests WHERE event_id = ?";
+		String vendorQuery = "SELECT vendor_id FROM event_vendors WHERE event_id = ?";
 		Event event = null;
 
 		try (Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true",
 				"root",
 				"");
-			 PreparedStatement stmt = conn.prepareStatement(query)) {
+			 PreparedStatement eventStmt = conn.prepareStatement(eventQuery);
+			 PreparedStatement guestStmt = conn.prepareStatement(guestQuery);
+			 PreparedStatement vendorStmt = conn.prepareStatement(vendorQuery)) {
 
-			stmt.setInt(1, eventId);
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
+			// Fetch event details
+			eventStmt.setInt(1, eventId);
+			try (ResultSet eventRs = eventStmt.executeQuery()) {
+				if (eventRs.next()) {
 					event = new Event(
-							rs.getInt("id"),
-							rs.getString("name"),
-							rs.getTimestamp("date"),
-							rs.getString("location"),
-							rs.getString("description")
+							eventRs.getInt("id"),
+							eventRs.getString("name"),
+							eventRs.getTimestamp("date"),
+							eventRs.getString("location"),
+							eventRs.getString("description")
 					);
 				}
 			}
+
+			if (event != null) {
+				// Fetch associated guests
+				guestStmt.setInt(1, eventId);
+				try (ResultSet guestRs = guestStmt.executeQuery()) {
+					List<Integer> guestIds = new ArrayList<>();
+					while (guestRs.next()) {
+						guestIds.add(guestRs.getInt("guestId"));
+					}
+
+				}
+
+				// Fetch associated vendors
+				vendorStmt.setInt(1, eventId);
+				try (ResultSet vendorRs = vendorStmt.executeQuery()) {
+					List<Integer> vendorIds = new ArrayList<>();
+					while (vendorRs.next()) {
+						vendorIds.add(vendorRs.getInt("vendorId"));
+					}
+
+				}
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return event;
 	}
+
+
 
 
 	public static List<User> fetchAllUsers() {
