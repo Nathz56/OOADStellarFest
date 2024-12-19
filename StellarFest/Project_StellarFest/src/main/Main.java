@@ -12,6 +12,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         LoginView loginView = new LoginView();
-        loginView.start(primaryStage); // Assuming LoginView has a 'start' method.
+        loginView.start(primaryStage);
     }
 }
