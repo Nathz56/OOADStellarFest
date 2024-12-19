@@ -7,12 +7,7 @@ import java.sql.ResultSet;
 
 import controllers.Controller;
 import javafx.stage.Stage;
-import view.AdminView;
-import view.EOView;
-import view.GuestView;
-import view.LoginView;
-import view.RegisterView;
-import view.VendorView;
+import view.*;
 import models.User;
 
 public class LoginViewController {
@@ -43,7 +38,7 @@ public class LoginViewController {
             	VendorView vendorView = new VendorView();
                 vendorView.start(primaryStage);
             }else if("Event Organizer".equals(user.getRole())) {
-            	EOView eoView = new EOView();
+            	EventOrganizerView eoView = new EventOrganizerView();
             	eoView.start(primaryStage);
             }
         } else {
