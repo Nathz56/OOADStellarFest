@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 11:06 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Dec 19, 2024 at 04:32 AM
+-- Server version: 10.4.19-MariaDB
+-- PHP Version: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,14 +34,50 @@ CREATE TABLE `events` (
   `location` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `organizer_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `name`, `date`, `location`, `description`, `organizer_id`) VALUES
-(1, 'EventTest', '0000-00-00 00:00:00', 'Bandung', 'EventTestAja', 1);
+(1, 'edit event', '2024-12-15 17:10:50', 'Bandung', 'EventTestAja', 1),
+(2, 'Sample Event', '2024-12-20 00:00:00', 'Location X', 'This is a sample event.', 1),
+(3, 'test', '2024-12-31 00:00:00', 'adadaddadad', 'addadadad', 1),
+(4, 'sssss', '2024-12-30 00:00:00', 'sssssssssssss', 'sssssssssssssssss', 1),
+(5, '1111111111111', '2024-12-20 00:00:00', '11111111111111111111111111111111', '1111111111111111', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_guests`
+--
+
+CREATE TABLE `event_guests` (
+  `id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `guest_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_vendors`
+--
+
+CREATE TABLE `event_vendors` (
+  `id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `event_vendors`
+--
+
+INSERT INTO `event_vendors` (`id`, `event_id`, `vendor_id`) VALUES
+(1, 1, 1),
+(2, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -54,7 +90,7 @@ CREATE TABLE `invitations` (
   `eventid` int(11) DEFAULT NULL,
   `userid` int(11) DEFAULT NULL,
   `status` enum('Pending','Accepted','Rejected') DEFAULT 'Pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `invitations`
@@ -64,7 +100,8 @@ INSERT INTO `invitations` (`id`, `eventid`, `userid`, `status`) VALUES
 (1, 1, 1, 'Accepted'),
 (2, 1, 1, 'Pending'),
 (3, 1, 5, 'Accepted'),
-(4, 1, 5, 'Accepted');
+(4, 1, 5, 'Accepted'),
+(5, 1, 7, 'Accepted');
 
 -- --------------------------------------------------------
 
@@ -74,22 +111,23 @@ INSERT INTO `invitations` (`id`, `eventid`, `userid`, `status`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `username` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('Event Organizer','Vendor','Guest','Admin') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `role` enum('Event Organizer','Vendor','Guest','Admin') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `username`, `password`, `role`) VALUES
-(1, 'testemail@gmail.com', 'testuser', '123', 'Guest'),
-(2, 'admin@gm.com', 'admin', '123', 'Admin'),
-(3, 'vendor@gm.com', 'vendor', '123', 'Vendor'),
-(4, 'eo@gm.com', 'eo', '123', 'Event Organizer'),
-(5, 'test2@gmail.com', 'test2', '123', 'Guest');
+INSERT INTO `users` (`id`, `email`, `username`, `password`, `role`, `created_at`, `updated_at`) VALUES
+(2, 'vendor1@example.com', 'vendor1', 'password1', 'Vendor', '2024-12-13 21:44:27', '2024-12-13 21:44:27'),
+(3, 'guest1@example.com', 'guest1', 'password1', 'Guest', '2024-12-13 21:44:27', '2024-12-13 21:44:27'),
+(4, 'test@gmail.com', 'test123', '3test123', 'Event Organizer', '2024-12-18 20:29:44', '2024-12-18 20:29:44'),
+(5, 'admin12345@gg.com', 'admin12345', 'adm123', 'Admin', '2024-12-19 02:52:03', '2024-12-19 02:52:03');
 
 -- --------------------------------------------------------
 
@@ -99,10 +137,21 @@ INSERT INTO `users` (`id`, `email`, `username`, `password`, `role`) VALUES
 
 CREATE TABLE `vendor` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text NOT NULL,
-  `vendor_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `vendorId` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `vendor`
+--
+
+INSERT INTO `vendor` (`id`, `name`, `description`, `vendorId`) VALUES
+(1, 'Vendor A', 'Specializes in catering services for events.', 'VEND001'),
+(2, 'Vendor B', 'Provides audiovisual equipment for large venues.', 'VEND002'),
+(3, 'Vendor C', 'Event decoration and theme specialists.', 'VEND003'),
+(4, 'Vendor D', 'Professional photography and videography services.', 'VEND004'),
+(5, 'Vendor E', 'Offers lighting and stage setup for events.', 'VEND005');
 
 --
 -- Indexes for dumped tables
@@ -112,16 +161,23 @@ CREATE TABLE `vendor` (
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `organizer_id` (`organizer_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `invitations`
+-- Indexes for table `event_guests`
 --
-ALTER TABLE `invitations`
+ALTER TABLE `event_guests`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `event_id` (`eventid`),
-  ADD KEY `user_id` (`userid`);
+  ADD UNIQUE KEY `event_id` (`event_id`,`guest_id`),
+  ADD KEY `guest_id` (`guest_id`);
+
+--
+-- Indexes for table `event_vendors`
+--
+ALTER TABLE `event_vendors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `event_id` (`event_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
 
 --
 -- Indexes for table `users`
@@ -136,7 +192,7 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vendor`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `vendor_id` (`vendor_id`);
+  ADD UNIQUE KEY `vendorId` (`vendorId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -146,13 +202,19 @@ ALTER TABLE `vendor`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `invitations`
+-- AUTO_INCREMENT for table `event_guests`
 --
-ALTER TABLE `invitations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `event_guests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `event_vendors`
+--
+ALTER TABLE `event_vendors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -164,30 +226,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vendor`
 --
 ALTER TABLE `vendor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `events`
+-- Constraints for table `event_guests`
 --
-ALTER TABLE `events`
-  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`organizer_id`) REFERENCES `users` (`id`);
+ALTER TABLE `event_guests`
+  ADD CONSTRAINT `event_guests_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `event_guests_ibfk_2` FOREIGN KEY (`guest_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `invitations`
+-- Constraints for table `event_vendors`
 --
-ALTER TABLE `invitations`
-  ADD CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`eventid`) REFERENCES `events` (`id`),
-  ADD CONSTRAINT `invitations_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`id`);
-
---
--- Constraints for table `vendor`
---
-ALTER TABLE `vendor`
-  ADD CONSTRAINT `vendor_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `users` (`id`);
+ALTER TABLE `event_vendors`
+  ADD CONSTRAINT `event_vendors_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`),
+  ADD CONSTRAINT `event_vendors_ibfk_2` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
