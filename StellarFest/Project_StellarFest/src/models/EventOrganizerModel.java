@@ -172,7 +172,7 @@ public class EventOrganizerModel {
         return vendors;
     }
 
-    public boolean inviteVendor(int eventId, int vendorId) {
+    public boolean sendVendorInvitation(int eventId, int vendorId) {
         String query = "INSERT INTO event_vendors (event_id, vendor_id) VALUES (?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -180,11 +180,12 @@ public class EventOrganizerModel {
             ps.setInt(2, vendorId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error inviting vendor.");
+            System.out.println("Error sending vendor invitation.");
             e.printStackTrace();
         }
         return false;
     }
+
 
     public ArrayList<String[]> getAvailableGuests(int eventId) {
         ArrayList<String[]> guests = new ArrayList<>();
@@ -210,7 +211,7 @@ public class EventOrganizerModel {
         return guests;
     }
 
-    public boolean inviteGuest(int eventId, int guestId) {
+    public boolean sendGuestInvitation(int eventId, int guestId) {
         String query = "INSERT INTO event_guests (event_id, guest_id) VALUES (?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -218,12 +219,11 @@ public class EventOrganizerModel {
             ps.setInt(2, guestId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error inviting guest.");
+            System.out.println("Error sending guest invitation.");
             e.printStackTrace();
         }
         return false;
     }
-
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/stellarfest?useSSL=false&allowPublicKeyRetrieval=true", "root", "");

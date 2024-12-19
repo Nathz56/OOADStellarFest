@@ -173,26 +173,38 @@ public class EventOrganizerView extends Application {
         ObservableList<String[]> data = FXCollections.observableArrayList(vendors);
         vendorTable.setItems(data);
 
-        Button inviteButton = new Button("Send Invitations");
-        inviteButton.setOnAction(e -> {
-            ArrayList<Integer> selectedVendorIds = new ArrayList<>();
-            for (int i = 0; i < vendorTable.getItems().size(); i++) {
-                if (vendorTable.getColumns().get(4).getCellObservableValue(i).getValue() != null) {
-                    selectedVendorIds.add(Integer.parseInt(vendorTable.getItems().get(i)[0]));
-                }
-            }
+//        Button inviteButton = new Button("Send Invitations");
+//        inviteButton.setOnAction(e -> {
+//            ArrayList<Integer> selectedVendorIds = new ArrayList<>();
+//            for (int i = 0; i < vendorTable.getItems().size(); i++) {
+//                if (vendorTable.getColumns().get(4).getCellObservableValue(i).getValue() != null) {
+//                    selectedVendorIds.add(Integer.parseInt(vendorTable.getItems().get(i)[0]));
+//                }
+//            }
+//
+//            if (selectedVendorIds.isEmpty()) {
+//                showAlert("Please select at least one vendor to invite.");
+//                return;
+//            }
+//
+//            String result = controller.sendVendorInvitation(eventId, selectedVendorId);
+//            showAlert(result);
+//            stage.close();
+//        });
 
-            if (selectedVendorIds.isEmpty()) {
-                showAlert("Please select at least one vendor to invite.");
-                return;
+        Button sendInvitationButton = new Button("Send Invitation");
+        sendInvitationButton.setOnAction(e -> {
+            String[] selectedVendor = vendorTable.getSelectionModel().getSelectedItem();
+            if (selectedVendor != null) {
+                int selectedVendorId = Integer.parseInt(selectedVendor[0]); // Vendor ID is in column 0
+                String result = controller.sendVendorInvitation(eventId, selectedVendorId);
+                System.out.println(result);
+            } else {
+                System.out.println("No vendor selected.");
             }
-
-            String result = controller.inviteVendors(eventId, selectedVendorIds);
-            showAlert(result);
-            stage.close();
         });
 
-        VBox root = new VBox(10, new Label("Select Vendors to Invite:"), vendorTable, inviteButton);
+        VBox root = new VBox(10, new Label("Select Vendors to Invite:"), vendorTable, sendInvitationButton);
         root.setPadding(new Insets(20));
 
         stage.setScene(new Scene(root, 600, 400));
@@ -237,26 +249,36 @@ public class EventOrganizerView extends Application {
         ObservableList<String[]> data = FXCollections.observableArrayList(guests);
         guestTable.setItems(data);
 
-        Button inviteButton = new Button("Send Invitations");
-        inviteButton.setOnAction(e -> {
-            ArrayList<Integer> selectedGuestIds = new ArrayList<>();
-            for (int i = 0; i < guestTable.getItems().size(); i++) {
-                if (guestTable.getColumns().get(3).getCellObservableValue(i).getValue() != null) {
-                    selectedGuestIds.add(Integer.parseInt(guestTable.getItems().get(i)[0]));
-                }
-            }
+//        Button inviteButton = new Button("Send Invitations");
+//        inviteButton.setOnAction(e -> {
+//            ArrayList<Integer> selectedGuestIds = new ArrayList<>();
+//            for (int i = 0; i < guestTable.getItems().size(); i++) {
+//                if (guestTable.getColumns().get(3).getCellObservableValue(i).getValue() != null) {
+//                    selectedGuestIds.add(Integer.parseInt(guestTable.getItems().get(i)[0]));
+//                }
+//            }
+//
+//            if (selectedGuestIds.isEmpty()) {
+//                showAlert("Please select at least one guest to invite.");
+//                return;
+//            }
+//
+//            String result = controller.inviteGuests(eventId, selectedGuestIds);
+//            showAlert(result);
+//            stage.close();
+//        });
 
-            if (selectedGuestIds.isEmpty()) {
-                showAlert("Please select at least one guest to invite.");
-                return;
+        Button sendInvitationButton = new Button("Send Invitations");
+        sendInvitationButton.setOnAction(e -> {
+            ObservableList<String[]> selectedItems = guestTable.getSelectionModel().getSelectedItems();
+            for (String[] guest : selectedItems) {
+                int guestId = Integer.parseInt(guest[0]);
+                String result = controller.sendGuestInvitation(eventId, guestId);
+                System.out.println(result);
             }
-
-            String result = controller.inviteGuests(eventId, selectedGuestIds);
-            showAlert(result);
-            stage.close();
         });
 
-        VBox root = new VBox(10, new Label("Select Guests to Invite:"), guestTable, inviteButton);
+        VBox root = new VBox(10, new Label("Select Guests to Invite:"), guestTable, sendInvitationButton);
         root.setPadding(new Insets(20));
 
         stage.setScene(new Scene(root, 600, 400));
